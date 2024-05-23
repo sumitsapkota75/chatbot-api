@@ -4,13 +4,14 @@ import (
 	"ai-backend/controller"
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func Router() {
 	router := gin.Default()
 	router.Use(gin.Logger())
-
+	router.Use(cors.Default())
 	router.POST("/chat", controller.ChatWithGemini)
 	// router.POST("/fetchHistory", handlers.HandleFetchHistory)
 
