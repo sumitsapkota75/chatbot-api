@@ -89,3 +89,24 @@ func (us *SaveChatService) GetConversation(email string) ([]models.Conversation,
 
 	return conversations, nil
 }
+
+func (us *SaveChatService) GetConversationByID(conversationID string) (models.Conversation, error) {
+	collection := us.client.Database("ai-db").Collection("conversations")
+
+	// Define a filter to search for conversation by ID
+	filter := bson.M{"conversation_id": conversationID}
+
+	// Create a variable to hold the conversation
+	var conversation models.Conversation
+
+	// Find one document that matches the filter
+	err := collection.FindOne(context.Background(), filter).Decode(&conversation)
+	if err != nil {
+		if err == mongo.ErrNoDocuments { // Handle case where no document is found
+			return models.Conversation{}, err // Return an empty conversation struct and the error
+		}
+		return models.Conversation{}, err // Return an empty conversation struct and the error for other errors
+	}
+
+	return conversation, nil
+}

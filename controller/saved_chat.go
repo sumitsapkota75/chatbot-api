@@ -38,3 +38,19 @@ func GetConversation(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"data": conversation})
 }
+
+func GetConversationByID(c *gin.Context) {
+	conversationID := c.Param("id")
+	// Check if conversationID parameter is missing
+	if conversationID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing conversation_id parameter"})
+		return
+	}
+	conversationService := services.NewSaveChatService(db.Client)
+	conversation, err := conversationService.GetConversationByID(conversationID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": conversation})
+}

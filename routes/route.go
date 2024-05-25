@@ -12,9 +12,13 @@ func Router() {
 	router := gin.Default()
 	router.Use(gin.Logger())
 	router.Use(cors.Default())
+	// get all conversation of user
 	router.GET("/get-conversation", controller.GetConversation)
+	// get a single conversation
+	router.GET("/single-chat/:id", controller.GetConversationByID)
+	// create chat with gemini sdk
 	router.POST("/chat", controller.ChatWithGemini)
-
+	// save new chats to the database
 	router.POST("/save-conversation", controller.SaveConversation)
 
 	log.Println("\033[93mChatGPT started. Press CTRL+C to quit.\033[0m")
