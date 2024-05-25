@@ -32,8 +32,7 @@ func (scs *SaveChatService) SaveChatService(conversationData models.Conversation
 
 	// Update object with conditional timestamp
 	update := bson.M{
-		"$push": bson.M{"messages": bson.M{"$each": conversationData.Messages}},
-		"$set":  bson.M{"email": conversationData.Email},
+		"$set": bson.M{"email": conversationData.Email, "messages": conversationData.Messages},
 	}
 
 	// Include timestamp only on creation
@@ -41,6 +40,7 @@ func (scs *SaveChatService) SaveChatService(conversationData models.Conversation
 		update["$set"] = bson.M{
 			"email":      conversationData.Email,
 			"time_stamp": currentTime,
+			"messages":   conversationData.Messages,
 		}
 	} else if err != nil { // Handle other potential errors during document check
 		return err
