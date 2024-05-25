@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -19,6 +21,7 @@ type Conversation struct {
 	ConversationId string     `bson:"conversation_id" json:"conversation_id"`
 	Messages       []Messages `bson:"messages" json:"messages"`
 	Email          string     `bson:"email" json:"email"`
+	TimeStamp      *time.Time `bson:"time_stamp" json:"time_stamp"`
 }
 type GetConversation struct {
 	ConversationId bson.Binary `bson:"id" json:"conversationId"`

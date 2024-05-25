@@ -14,6 +14,7 @@ var Client *mongo.Client
 
 // ConnectToMongoDB establishes a connection to the MongoDB database
 func ConnectToMongoDB() (*mongo.Client, error) {
+	fmt.Println("Connecting to MongoDB...")
 	ctx := context.Background()
 	db_username := os.Getenv("DB_USERNAME")
 	db_password := os.Getenv("DB_PASSWORD")

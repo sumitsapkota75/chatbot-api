@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"errors"
+	"time"
 
 	"ai-backend/models"
 
@@ -23,17 +23,34 @@ func NewSaveChatService(client *mongo.Client) *SaveChatService {
 func (scs *SaveChatService) SaveChatService(conversationData models.Conversation) error {
 	collection := scs.client.Database("ai-db").Collection("conversations")
 
-	// Define an update object to push new messages
+	currentTime := time.Now()
+
+	// Check for existing document
+	filter := bson.M{"conversation_id": conversationData.ConversationId}
+	var existingDoc models.Conversation
+	err := collection.FindOne(context.Background(), filter).Decode(&existingDoc)
+
+	// Update object with conditional timestamp
 	update := bson.M{
 		"$push": bson.M{"messages": bson.M{"$each": conversationData.Messages}},
-		"$set":  bson.M{"email": conversationData.Email}, // Update email field
+		"$set":  bson.M{"email": conversationData.Email},
+	}
+
+	// Include timestamp only on creation
+	if err == mongo.ErrNoDocuments { // No document found, so it's a new conversation
+		update["$set"] = bson.M{
+			"email":      conversationData.Email,
+			"time_stamp": currentTime,
+		}
+	} else if err != nil { // Handle other potential errors during document check
+		return err
 	}
 
 	// Upsert: Update existing or insert a new document if none exists
 	upsert := true
-	result, err := collection.UpdateOne(
+	_, err = collection.UpdateOne(
 		context.Background(),
-		bson.M{"conversation_id": conversationData.ConversationId},
+		filter, // Use same filter for checking and update
 		update,
 		&options.UpdateOptions{Upsert: &upsert},
 	)
@@ -41,11 +58,6 @@ func (scs *SaveChatService) SaveChatService(conversationData models.Conversation
 	// Handle different scenarios based on the result and error
 	if err != nil {
 		return err
-	}
-
-	// Check if document was modified (updated or inserted)
-	if result.ModifiedCount == 0 && result.MatchedCount == 0 {
-		return errors.New("unexpected: document not modified or matched")
 	}
 
 	return nil
