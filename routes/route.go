@@ -12,8 +12,10 @@ func Router() {
 	router := gin.Default()
 	router.Use(gin.Logger())
 	router.Use(cors.Default())
+	router.GET("/get-conversation", controller.GetConversation)
 	router.POST("/chat", controller.ChatWithGemini)
-	// router.POST("/fetchHistory", handlers.HandleFetchHistory)
+
+	router.POST("/save-conversation", controller.SaveConversation)
 
 	log.Println("\033[93mChatGPT started. Press CTRL+C to quit.\033[0m")
 	router.Run()
