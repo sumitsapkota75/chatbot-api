@@ -69,11 +69,14 @@ func (us *SaveChatService) GetConversation(email string) ([]models.Conversation,
 	// Define a filter to search for conversations by email
 	filter := bson.M{"email": email}
 
+	// Specify sort order by timestamp (descending)
+	sort := bson.M{"time_stamp": -1} // -1 indicates descending order
+
 	// Create a slice to hold the results
 	var conversations []models.Conversation
 
-	// Find all documents that match the filter
-	cursor, err := collection.Find(context.Background(), filter)
+	// Find all documents with sorting applied
+	cursor, err := collection.Find(context.Background(), filter, &options.FindOptions{Sort: sort})
 	if err != nil {
 		return nil, err
 	}

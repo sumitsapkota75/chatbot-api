@@ -4,7 +4,6 @@ import (
 	db "ai-backend/helpers"
 	"ai-backend/models"
 	"ai-backend/services"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,6 +36,5 @@ func GetConversation(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println(conversation)
 	c.JSON(http.StatusOK, gin.H{"data": conversation})
 }
