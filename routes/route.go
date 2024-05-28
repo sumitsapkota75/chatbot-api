@@ -12,6 +12,11 @@ func Router() {
 	router := gin.Default()
 	router.Use(gin.Logger())
 	router.Use(cors.Default())
+
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "Codex server up and running..."})
+	})
+
 	// get all conversation of user
 	router.GET("/get-conversation", controller.GetConversation)
 	// get a single conversation

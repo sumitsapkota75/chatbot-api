@@ -1,0 +1,7 @@
+env: standard
+runtime: go121
+service: default
+handlers:
+  - url: /.*
+    secure: always
+    script: auto
