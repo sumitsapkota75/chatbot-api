@@ -1,5 +1,5 @@
 env: standard
-runtime: go121
+runtime: go122
 service: default
 handlers:
   - url: /.*

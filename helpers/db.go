@@ -19,6 +19,7 @@ func ConnectToMongoDB() (*mongo.Client, error) {
 	db_username := os.Getenv("DB_USERNAME")
 	db_password := os.Getenv("DB_PASSWORD")
 	connectionString := fmt.Sprintf("mongodb+srv://%s:%s@ai-db.nfdl7hv.mongodb.net/?retryWrites=true&w=majority&appName=ai-db", db_username, db_password)
+	fmt.Println("connection string:", connectionString)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to MongoDB: %w", err)
